@@ -440,7 +440,7 @@ impl Entities {
     ///
     /// # Safety
     /// Must only be called for currently allocated `id`s.
-    pub unsafe fn resolve_unknown_gen(&self, id: u32) -> Entity {
+    pub fn resolve_unknown_gen(&self, id: u32) -> Entity {
         let meta_len = self.meta.len();
 
         if meta_len > id as usize {
