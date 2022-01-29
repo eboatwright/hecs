@@ -440,15 +440,15 @@ impl Entities {
     ///
     /// # Safety
     /// Must only be called for currently allocated `id`s.
-    pub fn resolve_unknown_gen(&self, id: u32) -> Entity {
+    pub fn resolve_unknown_gen(&self, id: u32) -> Option<Entity> {
         let meta_len = self.meta.len();
 
         if meta_len > id as usize {
             let meta = &self.meta[id as usize];
-            Entity {
+            Some(Entity {
                 generation: meta.generation,
                 id,
-            }
+            })
         } else {
             // See if it's pending, but not yet flushed.
             let free_cursor = self.free_cursor.load(Ordering::Relaxed);
@@ -456,12 +456,13 @@ impl Entities {
 
             if meta_len + num_pending > id as usize {
                 // Pending entities will have generation 0.
-                Entity {
+                Some(Entity {
                     generation: NonZeroU32::new(1).unwrap(),
                     id,
-                }
+                })
             } else {
-                panic!("entity id is out of range");
+                // panic!("entity id is out of range");
+                None
             }
         }
     }

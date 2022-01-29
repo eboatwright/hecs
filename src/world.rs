@@ -509,7 +509,7 @@ impl World {
     ///
     /// `id` must correspond to a currently live [`Entity`]. A despawned or never-allocated `id`
     /// will produce undefined behavior.
-    pub fn find_entity_from_id(&self, id: u32) -> Entity {
+    pub fn find_entity_from_id(&self, id: u32) -> Option<Entity> {
         self.entities.resolve_unknown_gen(id)
     }
 
@@ -1169,7 +1169,7 @@ impl Iterator for SpawnColumnBatchIter<'_> {
 
     fn next(&mut self) -> Option<Entity> {
         let id = self.id_alloc.next(self.entities)?;
-        Some(self.entities.resolve_unknown_gen(id))
+        self.entities.resolve_unknown_gen(id)
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
